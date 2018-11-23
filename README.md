@@ -38,46 +38,55 @@ curl -X GET \
   -H 'Postman-Token: 1d972e80-109c-4872-8f3d-9669c4f15006' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Britney'
-  ```
+  
+```
 
 User by Name
 
 ```
+
 curl -X GET \
   http://localhost:3005/v1/user/name/Barnett \
   -H 'Postman-Token: c81dca87-286a-460c-94ab-60713e6dba84' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Britney'
+
 ```
 
 User Policies
 
 ```
+
 curl -X GET \
   http://localhost:3005/v1/user/name/Britney/policies \
   -H 'Postman-Token: f0f59166-9c19-4a2c-ad4e-378fb4f8b148' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Britney'
+
 ```
 
 User by Policy
 
 ```
+
 curl -X GET \
   http://localhost:3005/v1/user/name/none/policies \
   -H 'Postman-Token: 4c39101c-6a9f-4dff-9943-1a7ff14072a0' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Britney'
+
 ```
 
 Not Authorized Example
 
 ```
+
 curl -X GET \
   http://localhost:3005/v1/policy/4f744ead-f4ff-498e-9d5f-fd6819cd4c77/user \
   -H 'Postman-Token: b4aa8b35-f8b9-4c5e-96b2-93f99a387e59' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Barnett'
+  
 ```
 
 ##Testing
