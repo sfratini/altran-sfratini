@@ -1,17 +1,16 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
+  "name": "api",
+  "description": "Altran API",
   "scripts": {
     "lint": "eslint .",
-    "serve": "firebase serve --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "start": "npm run shell"
   },
   "dependencies": {
+    "express": "4.16.4",
     "firebase-admin": "6.0.0",
-    "firebase-functions": "2.1.0"
+    "firebase-functions": "2.1.0",
+    "helmet": "3.15.0",
+    "node-fetch": "2.3.0"
   },
   "devDependencies": {
     "eslint": "4.12.0",
