@@ -1,45 +1,92 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# Introduction
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+Repo includes both backend and frontend code. Backend is made with nodejs 8.13.0, express, Jest for testing and includes middleware functions for role checking. 
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+#Folder structure
 
----
+1. build: Compiled files for frontend. More info in **Installation**. 
+2. functions: Main API folder
+    1. config: Stores the endpoints configuration
+    2. middleware: Includes the pre made server responses for API and some helper functions like find, verify and hasAccess
+        1. find: Generic logic to find/filter information inside the legacy endpoints
+        2. verify: First check for required headers
+        3. hasAccess: Role control
+    3. roles: Main role configuration
+    4. routes: Includes all the routes for the API (User and Policies)
+    5. test: Test files to be executed by Jest
+3. public: Main html file to be executed by frontend
+4. src: React source files
 
-## Edit a file
+#API
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
+##Intro
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+API can be installed by either npm or yarn. Package has specific version codes and has tested with node 8.13.0
 
----
+##Execution
 
-## Create a file
+1. Execute npm i or yarn inside functions folder
+2. Execute yarn start or npm start
 
-Next, you’ll add a new file to this repository.
+##Examples
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+User by ID
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+```
+curl -X GET \
+  http://localhost:3005/v1/user/id/a0ece5db-cd14-4f21-812f-966633e7be86 \
+  -H 'Postman-Token: 1d972e80-109c-4872-8f3d-9669c4f15006' \
+  -H 'cache-control: no-cache' \
+  -H 'x-user: Britney'
+  ```
 
----
+User by Name
 
-## Clone a repository
+```
+curl -X GET \
+  http://localhost:3005/v1/user/name/Barnett \
+  -H 'Postman-Token: c81dca87-286a-460c-94ab-60713e6dba84' \
+  -H 'cache-control: no-cache' \
+  -H 'x-user: Britney'
+```
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+User Policies
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+```
+curl -X GET \
+  http://localhost:3005/v1/user/name/Britney/policies \
+  -H 'Postman-Token: f0f59166-9c19-4a2c-ad4e-378fb4f8b148' \
+  -H 'cache-control: no-cache' \
+  -H 'x-user: Britney'
+```
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+User by Policy
+
+```
+curl -X GET \
+  http://localhost:3005/v1/user/name/none/policies \
+  -H 'Postman-Token: 4c39101c-6a9f-4dff-9943-1a7ff14072a0' \
+  -H 'cache-control: no-cache' \
+  -H 'x-user: Britney'
+```
+
+Not Authorized Example
+
+```
+curl -X GET \
+  http://localhost:3005/v1/policy/4f744ead-f4ff-498e-9d5f-fd6819cd4c77/user \
+  -H 'Postman-Token: b4aa8b35-f8b9-4c5e-96b2-93f99a387e59' \
+  -H 'cache-control: no-cache' \
+  -H 'x-user: Barnett'
+```
+
+##Testing
+
+Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the functions folder. 
+
+#Frontend
+
+##Intro
+
+Frontend has been done with React 
+
