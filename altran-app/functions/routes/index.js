@@ -9,16 +9,6 @@ let user = express.Router();
 
 user.get('/v1/user/id/:id', hasAccess("user:read"), (req, res) => {
 
-    if (!req.params.id){
-        let message = {
-            code: "API004",
-            message: "Error",
-            description: "Missing parameters"
-        }
-        serverErrorResponse(res, message);
-        return;
-    }
-
     let logic = possibleClient => {
         if (possibleClient.id == req.params.id){
             return possibleClient;
@@ -67,16 +57,6 @@ user.get('/v1/user/id/:id', hasAccess("user:read"), (req, res) => {
 })
 
 user.get('/v1/user/name/:name', hasAccess("user:read"), (req, res) => {
-
-    if (!req.params.name){
-        let message = {
-            code: "API004",
-            message: "Error",
-            description: "Missing parameters"
-        }
-        serverErrorResponse(res, message);
-        return;
-    }
 
     let logic = possibleClient => {
         if (possibleClient.name == req.params.name){
@@ -127,16 +107,6 @@ user.get('/v1/user/name/:name', hasAccess("user:read"), (req, res) => {
 
 user.get('/v1/user/name/:name/policies', hasAccess("policy:read"), (req, res) => {
 
-    if (!req.params.name){
-        let message = {
-            code: "API004",
-            message: "Error",
-            description: "Missing parameters"
-        }
-        serverErrorResponse(res, message);
-        return;
-    }
-
     let logic = possibleClient => {
         if (possibleClient.name == req.params.name){
             return possibleClient;
@@ -156,24 +126,29 @@ user.get('/v1/user/name/:name/policies', hasAccess("policy:read"), (req, res) =>
             return find(fetch, endpoints.policies, "policies", policyLogic, true);
            
         } else {
+            return null;
+        }
+
+    })
+    .then(policies => {
+        if (policies){
+            let message = {
+                code: "S01",
+                message: "Success",
+                description: "Found"
+            }
+            successResponse(res, message, policies);
+            return
+        } else {
             let message = {
                 code: "API005",
                 message: "Error",
                 description: "Not found"
             }
             notFound(res, message);
-            return
+            return;
         }
-
-    })
-    .then(policies => {
-        let message = {
-            code: "S01",
-            message: "Success",
-            description: "Found"
-        }
-        successResponse(res, message, policies);
-        return
+        
     })
     .catch(err => {
 
@@ -196,16 +171,6 @@ user.get('/v1/user/name/:name/policies', hasAccess("policy:read"), (req, res) =>
 
 user.get('/v1/policy/:number/user', hasAccess("policy:read"), (req, res) => {
 
-    if (!req.params.number){
-        let message = {
-            code: "API004",
-            message: "Error",
-            description: "Missing parameters"
-        }
-        serverErrorResponse(res, message);
-        return;
-    }
-
     let logic = possiblePolicy => {
         if (possiblePolicy.id == req.params.number){
             return possiblePolicy;
@@ -225,6 +190,20 @@ user.get('/v1/policy/:number/user', hasAccess("policy:read"), (req, res) => {
             return find(fetch, endpoints.users, "clients", clientLogic);
            
         } else {
+           return null;
+        }
+
+    })
+    .then(client => {
+        if (client){
+            let message = {
+                code: "S01",
+                message: "Success",
+                description: "Found"
+            }
+            successResponse(res, message, client);
+            return
+        } else {
             let message = {
                 code: "API005",
                 message: "Error",
@@ -234,15 +213,6 @@ user.get('/v1/policy/:number/user', hasAccess("policy:read"), (req, res) => {
             return
         }
 
-    })
-    .then(client => {
-        let message = {
-            code: "S01",
-            message: "Success",
-            description: "Found"
-        }
-        successResponse(res, message, client);
-        return
     })
     .catch(err => {
 
