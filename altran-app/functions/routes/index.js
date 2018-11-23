@@ -1,36 +1,13 @@
 const express = require("express");
 const fetch = require('node-fetch');
-const endpoints = require('../middleware/endpoints');
+const endpoints = require('../config/endpoints');
+const find = require('../middleware/index').find;
+const hasAccess = require('../middleware/index').hasAccess;
 const {successResponse, serverErrorResponse, notFound} = require("../middleware/responses")
 
 let user = express.Router();
 
-function find(fetch, endpoint, root, logic, filter = false){
-    return new Promise((resolve, reject) => {
-        fetch(endpoint)
-        .then(response => {
-            if (response.headers && response.headers.get("content-type") && response.headers.get("content-type").indexOf("application/json") > -1)            
-                return response.json();
-            else return response;
-        })
-        .then(responseJson => {
-            let array = responseJson[root];
-            if (array && Array.isArray(array)){
-                if (filter)
-                    resolve(array.filter(logic));
-                else 
-                    resolve(array.find(logic));
-            } else {
-                reject(null);
-            }
-        })
-        .catch(err => {
-            reject(err);
-        })
-    })
-}
-
-user.get('/v1/user/id/:id', (req, res) => {
+user.get('/v1/user/id/:id', hasAccess("user:read"), (req, res) => {
 
     if (!req.params.id){
         let message = {
@@ -89,7 +66,7 @@ user.get('/v1/user/id/:id', (req, res) => {
     
 })
 
-user.get('/v1/user/name/:name', (req, res) => {
+user.get('/v1/user/name/:name', hasAccess("user:read"), (req, res) => {
 
     if (!req.params.name){
         let message = {
@@ -148,7 +125,7 @@ user.get('/v1/user/name/:name', (req, res) => {
     
 })
 
-user.get('/v1/user/name/:name/policies', (req, res) => {
+user.get('/v1/user/name/:name/policies', hasAccess("policy:read"), (req, res) => {
 
     if (!req.params.name){
         let message = {
@@ -217,7 +194,7 @@ user.get('/v1/user/name/:name/policies', (req, res) => {
 
 })
 
-user.get('/v1/policy/:number/user', (req, res) => {
+user.get('/v1/policy/:number/user', hasAccess("policy:read"), (req, res) => {
 
     if (!req.params.number){
         let message = {

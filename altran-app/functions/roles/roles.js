@@ -1,11 +1,11 @@
 let roles = {
     admin: {
-        can: ['policy:read'],
+        can: ["policy:read"],
         inherits: ['user']
     },
     user: {
-        can: ['user:read']
+        can: ["user:read"]
     }
 }
 
-module.export = roles;
+module.exports = roles;
