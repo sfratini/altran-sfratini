@@ -139,7 +139,8 @@ class UserCard extends React.Component {
 }
 
 UserCard.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(UserCard);
