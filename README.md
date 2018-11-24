@@ -105,7 +105,7 @@ curl -X GET \
 
 ##Testing
 
-Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the api folder. 
+Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the api folder. Should take around 30 seconds. 
 
 #Frontend
 
@@ -129,4 +129,4 @@ When clicking on each table record a modal will appear. Two collapsible sections
 
 ##Testing
 
-Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the root folder. 
+Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the root folder. If the test dont run because they dont detect changes, press 'a' 
