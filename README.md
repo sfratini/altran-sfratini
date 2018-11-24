@@ -116,3 +116,17 @@ When clicking on each table record a modal will appear. Two collapsible sections
 ##Testing
 
 Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the root folder. 
+
+#General comments
+
+The following are comments or observations related to the code and delivery:
+
+1. Frontend
+  1. React-virtualized was analyzed but then discarded due to compatibility issues with Material UI. After doing pagination the performance was acceptable and not needed. 
+  2. Snapshot testing could be added to further increase the unit testing. 
+  3. Test Coverage could also be added. (Preferred platform is Istanbul)
+2. API
+  1. Babel could be implemented in API but implementation effort was not deemed necessary to only transpile import/export. 
+  2. Roles should be loaded async from database. 
+  3. Client endpoints should not be used in production environment since the information for authorization is inside the same response. Security issue. 
+  4. x-user header should be a token and /login endpoint should exist. Authentication in this API is mostly cosmetic and for demostration. Has no real use in production since it is easily bypassed. 
