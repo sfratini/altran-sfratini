@@ -23,7 +23,7 @@ Repo includes both backend and frontend code. Backend is made with nodejs 8.13.0
 
 API can be installed by either npm or yarn. Package has specific version codes and has tested with node 8.13.0
 
-##Execution
+##Installation and Execution
 
 1. Execute npm i or yarn inside functions folder
 2. Execute yarn start or npm start
@@ -86,7 +86,7 @@ curl -X GET \
   -H 'Postman-Token: b4aa8b35-f8b9-4c5e-96b2-93f99a387e59' \
   -H 'cache-control: no-cache' \
   -H 'x-user: Barnett'
-  
+
 ```
 
 ##Testing
@@ -97,5 +97,22 @@ Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' fr
 
 ##Intro
 
-Frontend has been done with React 
+Frontend has been done with React, Webpack, and Material UI. Material UI was chosen in order to provide a quick UI layour consistent with Material Design. Create-React-App was used for the app skeleton with a webpack blackbox setup. 
 
+##Installation and Execution
+
+1. Execute npm i or yarn inside root folder (altran-app)
+2. Execute yarn start or npm start
+3. Wait for the code to compile and open the browser or go into http://localhost:3000/ 
+
+##Features
+
+Since the JSON consist of more than 1300 records a pagination approach was used, in order to minimize the DOM size and improve performance. 
+
+Table can be sorted (Initially sorted by name asc) and search within records. The fields that will be searched are: name, age, weight, height, hair color and professions. 
+
+When clicking on each table record a modal will appear. Two collapsible sections (Friends and Professions) will be available there that are not fitted in the table. 
+
+##Testing
+
+Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the root folder. 
