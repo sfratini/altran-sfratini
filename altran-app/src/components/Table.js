@@ -18,8 +18,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import CardMedia from '@material-ui/core/CardMedia';
-import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 import 'react-virtualized/styles.css'; 
+import SearchBar from 'material-ui-search-bar'
 
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
@@ -135,37 +135,39 @@ const toolbarStyles = theme => ({
   },
 });
 
-let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+class EnhancedTableToolbar extends React.Component {
+
+    state = {
+        search: null
+    }
+
+    render() {
+  
+        const { classes } = this.props;
 
   return (
-    <Toolbar
-      className={classNames(classes.root)}
-    >
-      <div className={classes.title}>
-         <Typography variant="h6" id="tableTitle">
-            Brastlewark
-          </Typography>
-      </div>
-      <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
-    </Toolbar>
-  );
-};
+        <Toolbar
+        className={classNames(classes.root)}
+        >
+        <div className={classes.title}>
+            <Typography variant="h6" id="tableTitle">
+                Brastlewark
+            </Typography>
+        </div>
+        <div className={classes.spacer} />
+        <div className={classes.actions}>
+            <SearchBar
+                value={this.state.search}
+                onChange={(newValue) => this.setState({ search: newValue })}
+                onRequestSearch={() => this.props.onSearch(this.state.search)}
+                onCancelSearch={() => this.props.onSearch(null)}
+            />
+        </div>
+        </Toolbar>
+    );
+    };
+
+}
 
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -187,7 +189,8 @@ const styles = theme => ({
   },
   cover: {
     width: 80,
-    height: 80
+    height: 80,
+    borderRadius: 40
   },
 });
 
@@ -200,16 +203,8 @@ class EnhancedTable extends React.Component {
     data: [],
     page: 0,
     rowsPerPage: 5,
+    search: null
   };
-
-  constructor(){
-      super();
-
-      this.cache = new CellMeasurerCache({
-        fixedWidth: true,
-        defaultHeight: 100
-    });
-  }
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -280,14 +275,30 @@ class EnhancedTable extends React.Component {
     })
   }
 
+  search = (search) => {
+      this.setState({search})
+  }
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
+    let filtered = [];
+    if (this.state.search){
+        let l = this.state.search.toLowerCase();
+        filtered = data.filter(item => {
+            return (item.name.toLowerCase().indexOf(l) > -1 || item.weight.toString().indexOf(l) > -1 || item.height.toString().indexOf(l) > -1 || item.hair_color.toLowerCase().indexOf(l) > -1 || item.age.toString().indexOf(l) > -1)
+        })
+    } else filtered = data;
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, filtered.length - page * rowsPerPage);
+
+    let sorted = stableSort(filtered, getSorting(order, orderBy))
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} onSearch={this.search}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -295,11 +306,10 @@ class EnhancedTable extends React.Component {
               order={order}
               orderBy={orderBy}
               onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
+              rowCount={sorted.length}
             />
             <TableBody>
-              {stableSort(data, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {sorted
                 .map(n => {
                   return (
                     <TableRow
@@ -335,7 +345,7 @@ class EnhancedTable extends React.Component {
         </div>
         <TablePagination
           component="div"
-          count={data.length}
+          count={filtered.length}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{
