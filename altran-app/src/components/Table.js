@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Grid from '@material-ui/core/Grid';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
@@ -20,12 +21,8 @@ import { lighten } from '@material-ui/core/styles/colorManipulator';
 import CardMedia from '@material-ui/core/CardMedia';
 import 'react-virtualized/styles.css'; 
 import SearchBar from 'material-ui-search-bar'
-
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
+import Modal from '@material-ui/core/Modal';
+import UserCard from './UserCard';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,7 +62,7 @@ class EnhancedTableHead extends React.Component {
   };
 
   render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+    const { order, orderBy } = this.props;
 
     return (
       <TableHead>
@@ -203,7 +200,9 @@ class EnhancedTable extends React.Component {
     data: [],
     page: 0,
     rowsPerPage: 5,
-    search: null
+    search: null,
+    modal: false,
+    current: null
   };
 
   handleRequestSort = (event, property) => {
@@ -218,24 +217,9 @@ class EnhancedTable extends React.Component {
   };
 
   handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    this.setState({ selected: newSelected });
+    this.setState({ modal: true, current: this.state.data.find(item => {
+        return (item.id === id);
+    }) });
   };
 
   handleChangePage = (event, page) => {
@@ -298,6 +282,20 @@ class EnhancedTable extends React.Component {
 
     return (
       <Paper className={classes.root}>
+            <Modal open={this.state.modal} onClose={() => this.setState({modal: false})}> 
+            <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justify="center"
+                style={{ minHeight: '100vh' }}
+                >
+                <Grid item xs={12}>
+                    <UserCard item={this.state.current} onClose={() => this.setState({modal: false})}/>
+                </Grid>   
+                </Grid> 
+            </Modal>
         <EnhancedTableToolbar numSelected={selected.length} onSearch={this.search}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
