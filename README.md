@@ -5,7 +5,7 @@ Repo includes both backend and frontend code. Backend is made with nodejs 8.13.0
 #Folder structure
 
 1. build: Compiled files for frontend. More info in **Installation**. 
-2. functions: Main API folder
+2. api: Main API folder
     1. config: Stores the endpoints configuration
     2. middleware: Includes the pre made server responses for API and some helper functions like find, verify and hasAccess
         1. find: Generic logic to find/filter information inside the legacy endpoints
@@ -39,7 +39,7 @@ API can be installed by either npm or yarn. Package has specific version codes a
 
 ##Installation and Execution
 
-1. Execute npm i or yarn inside functions folder
+1. Execute npm i or yarn inside api folder
 2. Execute yarn start or npm start
 
 ##Examples
@@ -105,7 +105,7 @@ curl -X GET \
 
 ##Testing
 
-Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the functions folder. 
+Jest unit testing is included in repo. Just execute 'npm test' or 'yarn jest' from inside the api folder. 
 
 #Frontend
 
