@@ -280,53 +280,10 @@ class EnhancedTable extends React.Component {
     })
   }
 
-  renderRow = ({ index, key, style, parent }) => {
-
-    let n = this.state.data[index];
-
-    return (
-      <CellMeasurer 
-      key={key}
-      cache={this.cache}
-      parent={parent}
-      columnIndex={0}
-      rowIndex={index}>
-        <div style={style}>
-         
-        <TableRow
-            hover
-            onClick={event => this.handleClick(event, n.id)}
-            tabIndex={-1}
-            key={n.id}
-        >
-            <TableCell>
-                <CardMedia
-                    className={this.props.classes.cover}
-                    image={n.thumbnail}
-                    title={n.name}
-                />
-            </TableCell>
-            <TableCell component="th" scope="row" padding="none">
-            {n.name}
-            </TableCell>
-            <TableCell numeric>{n.age}</TableCell>
-            <TableCell numeric>{n.weight}</TableCell>
-            <TableCell numeric>{n.height}</TableCell>
-            <TableCell>{n.hair_color}</TableCell>
-        </TableRow>
-
-        </div>
-      </CellMeasurer>
-    );
-  }
-
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
-    let sorted = stableSort(data, getSorting(order, orderBy))
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
       <Paper className={classes.root}>
@@ -341,22 +298,33 @@ class EnhancedTable extends React.Component {
               rowCount={data.length}
             />
             <TableBody>
-            
-            <AutoSizer>
-            {({ width, height }) => {
-
-            return <List
-                width={width}
-                height={height}
-                rowHeight={this.cache.rowHeight}
-                rowRenderer={this.renderRow}
-                rowCount={this.state.data.length}
-                deferredMeasurementCache={this.cache}
-                overscanRowCount={3} />
-            }}
-
-            </AutoSizer>
-        
+              {stableSort(data, getSorting(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map(n => {
+                  return (
+                    <TableRow
+                      hover
+                      onClick={event => this.handleClick(event, n.id)}
+                      tabIndex={-1}
+                      key={n.id}
+                    >
+                      <TableCell>
+                            <CardMedia
+                                className={classes.cover}
+                                image={n.thumbnail}
+                                title={n.name}
+                            />
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {n.name}
+                      </TableCell>
+                      <TableCell numeric>{n.age}</TableCell>
+                      <TableCell numeric>{n.weight}</TableCell>
+                      <TableCell numeric>{n.height}</TableCell>
+                      <TableCell>{n.hair_color}</TableCell>
+                    </TableRow>
+                  );
+                })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 49 * emptyRows }}>
                   <TableCell colSpan={6} />
